@@ -13,6 +13,7 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.bson.Document;
 
 public class EmailTask {
+
   public static void main(String[] args) {
     ParameterTool parameter = ParameterTool.fromArgs(args);
     LocalEnvironment env = ExecutionEnvironment.createLocalEnvironment();
@@ -21,8 +22,7 @@ public class EmailTask {
     // 统计相同年代人数
     DataSource<String> text = env.readTextFile("input");
     DataSet<EmailEntity> mapResult = text.map(new EmailMap());
-    DataSet<EmailEntity> reduceResult =
-        mapResult.groupBy("groupFieldId").reduce(new EmailReduce());
+    DataSet<EmailEntity> reduceResult = mapResult.groupBy("groupFieldId").reduce(new EmailReduce());
     // 更新或删除总人数
     try {
       List<EmailEntity> resultList = reduceResult.collect();

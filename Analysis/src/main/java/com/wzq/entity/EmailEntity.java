@@ -2,15 +2,15 @@ package com.wzq.entity;
 
 public class EmailEntity {
 
-  private String emailType; // 邮箱类型
+  private String  emailType; // 邮箱类型
   private long count;
-  private String gourpField;
+  private String  gourpField;
 
-  public String getEmailType() {
+  public String  getEmailType() {
     return emailType;
   }
 
-  public void setEmailType(String emailType) {
+  public void setEmailType(String  emailType) {
     this.emailType = emailType;
   }
 

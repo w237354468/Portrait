@@ -9,8 +9,26 @@ import java.util.List;
 
 // 调用其他服务
 @FeignClient(value = "searchService")
-public interface BaseYearService {
+public interface MongoDataService {
 
-  @RequestMapping(value = "YearBase/searchYearBase", method = RequestMethod.GET)
+  @RequestMapping(value = "searchInfo/searchYearBase", method = RequestMethod.GET)
   public List<AnalyResult> searchYearBase();
+
+  @RequestMapping(value = "searchInfo/searchUserType", method = RequestMethod.POST)
+  public List<AnalyResult> searchUserType();
+
+  @RequestMapping(value = "searchInfo/searchEmail", method = RequestMethod.POST)
+  public List<AnalyResult> searchEmail();
+
+  @RequestMapping(value = "searchInfo/searchConsumptionLevel", method = RequestMethod.POST)
+  public List<AnalyResult> searchConsumerLevel();
+
+  @RequestMapping(value = "searchInfo/searchChaoNanNv", method = RequestMethod.POST)
+  public List<AnalyResult> searchChaoNanNv();
+
+  @RequestMapping(value = "searchInfo/searchCarrier", method = RequestMethod.POST)
+  public List<AnalyResult> searchCarrier();
+
+  @RequestMapping(value = "searchInfo/searchBrandLike", method = RequestMethod.POST)
+  public List<AnalyResult> searchBrandLike();
 }

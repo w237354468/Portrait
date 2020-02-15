@@ -1,7 +1,8 @@
-package com.wzq.entity;
+package com.wzq.form;
 
-public class BaseViewAnaly {
+public class BaseViewform {
   private String type;
+    private String userId;
 
     public String getType() {
         return type;
@@ -19,5 +20,4 @@ public class BaseViewAnaly {
         this.userId = userId;
     }
 
-    private String userId;
 }

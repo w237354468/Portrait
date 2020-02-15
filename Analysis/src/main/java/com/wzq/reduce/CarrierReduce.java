@@ -6,7 +6,7 @@ import org.apache.flink.api.common.functions.ReduceFunction;
 public class CarrierReduce implements ReduceFunction<CarrierInfo> {
 
   public CarrierInfo reduce(CarrierInfo carrierInfo, CarrierInfo t1) throws Exception {
-    String type = carrierInfo.getCarrier();
+    Integer type = carrierInfo.getCarrier();
 
     long count1 = carrierInfo.getCount();
     long count2 = t1.getCount();

@@ -37,15 +37,6 @@ public class HbaseUtil {
     }
   }
 
-  public void createTable(String tableName, String familyName) throws IOException {
-    HTableDescriptor hTableDescriptor = new HTableDescriptor(tableName);
-    HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(familyName);
-    hTableDescriptor.addFamily(hColumnDescriptor);
-
-    admin.createTable(hTableDescriptor);
-    System.out.println("over");
-  }
-
   public static void putData(
       String tableName, String rowKey, String familyName, Map<String, String> data)
       throws IOException {
@@ -80,7 +71,8 @@ public class HbaseUtil {
     return new String(resultByte);
   }
 
-  public static void putData(String tableName, String rowKey, String familyName, String column,String data)
+  public static void putData(String tableName, String rowKey, String familyName, String column,
+      String  data)
       throws IOException {
     Table table = conn.getTable(TableName.valueOf(tableName));
     Put newPut = new Put(rowKey.getBytes());
@@ -92,5 +84,14 @@ public class HbaseUtil {
     System.setProperty("hadoop.home.dir", "E:/");
     String data = getData("baseuserscaninfo", "1", "time", "firstvisittime");
     System.out.println(data);
+  }
+
+  public void createTable(String tableName, String familyName) throws IOException {
+    HTableDescriptor hTableDescriptor = new HTableDescriptor(tableName);
+    HColumnDescriptor hColumnDescriptor = new HColumnDescriptor(familyName);
+    hTableDescriptor.addFamily(hColumnDescriptor);
+
+    admin.createTable(hTableDescriptor);
+    System.out.println("over");
   }
 }

@@ -6,7 +6,7 @@ import org.apache.flink.api.common.functions.ReduceFunction;
 public class EmailReduce implements ReduceFunction<EmailEntity> {
 
   public EmailEntity reduce(EmailEntity emailEntity, EmailEntity t1) throws Exception {
-    String type = emailEntity.getEmailType();
+    Integer type = emailEntity.getEmailType();
 
     long count1 = emailEntity.getCount();
     long count2 = t1.getCount();

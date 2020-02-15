@@ -13,6 +13,7 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.bson.Document;
 
 public class YearBaseTask {
+
   public static void main(String[] args) {
     ParameterTool parameter = ParameterTool.fromArgs(args);
     LocalEnvironment env = ExecutionEnvironment.createLocalEnvironment();
@@ -28,7 +29,7 @@ public class YearBaseTask {
       for (YearBase yearBase : resultList) {
         String ageZone = yearBase.getYearType();
         long count = yearBase.getCount();
-        Document doc = MonGoUtil.findoneby("yearbasestatics", "youfanPortrait", ageZone);
+        Document doc = MonGoUtil.findoneby("yearbasestatics", "wzqPortrait", ageZone);
 
         if (doc == null) {
           doc = new Document();
@@ -40,7 +41,7 @@ public class YearBaseTask {
           Long countTotal = count + countpre;
           doc.put("count", countTotal);
         }
-        MonGoUtil.saverupdateMongo("yearbasestatics", "youfanPortrait", doc);
+        MonGoUtil.saverupdateMongo("yearbasestatics", "wzqPortrait", doc);
       }
     } catch (Exception e) {
       e.printStackTrace();

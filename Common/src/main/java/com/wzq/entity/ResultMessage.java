@@ -1,6 +1,7 @@
 package com.wzq.entity;
 
 public class ResultMessage {
+
   private String message;
   private String status;
 

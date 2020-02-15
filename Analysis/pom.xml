@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.example</groupId>
   <artifactId>Analysis</artifactId>
-
-  <parent>
-    <groupId>org.apache.flink</groupId>
-    <artifactId>flink-examples</artifactId>
-    <version>1.8.2</version>
-  </parent>
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>8</source>
           <target>8</target>
         </configuration>
+        <groupId>org.apache.maven.plugins</groupId>
       </plugin>
     </plugins>
   </build>
-
   <dependencies>
     <dependency>
       <artifactId>flink-java</artifactId>
@@ -37,24 +28,43 @@
       <version>1.8.2</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.hbase</groupId>
       <artifactId>hbase-client</artifactId>
-      <version>1.2.3</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-server</artifactId>
-      <version>1.2.3</version>
+      <version>1.2.2</version>
     </dependency>
     <dependency>
-      <groupId>org.mongodb</groupId>
+      <artifactId>hbase-server</artifactId>
+      <groupId>org.apache.hbase</groupId>
+      <version>1.2.2</version>
+    </dependency>
+    <dependency>
       <artifactId>mongodb-driver</artifactId>
+      <groupId>org.mongodb</groupId>
       <version>3.0.1</version>
     </dependency>
     <dependency>
-      <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
+      <groupId>com.alibaba</groupId>
       <version>1.2.60</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-kafka-0.10_2.12</artifactId>
+      <version>1.8.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>Common</artifactId>
+      <version>1.0</version>
+    </dependency>
   </dependencies>
+
+  <groupId>org.example</groupId>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>flink-examples</artifactId>
+    <groupId>org.apache.flink</groupId>
+    <version>1.8.2</version>
+  </parent>
 </project>

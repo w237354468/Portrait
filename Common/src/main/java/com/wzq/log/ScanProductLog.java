@@ -2,7 +2,7 @@ package com.wzq.log;
 
 import java.io.Serializable;
 
-public class ScanProductLog  implements Serializable {
+public class ScanProductLog implements Serializable {
 
   private int productId;
   private int productTypeId; // 商品类别id
@@ -11,6 +11,7 @@ public class ScanProductLog  implements Serializable {
   private int userId;
   private int useType;
   private String ip; //访问ip
+  private String  brand; //品牌
 
   public int getProductId() {
     return productId;
@@ -66,5 +67,13 @@ public class ScanProductLog  implements Serializable {
 
   public void setIp(String ip) {
     this.ip = ip;
+  }
+
+  public String  getBrand() {
+    return brand;
+  }
+
+  public void setBrand(String  brand) {
+    this.brand = brand;
   }
 }

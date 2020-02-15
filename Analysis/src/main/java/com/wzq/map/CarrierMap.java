@@ -30,7 +30,7 @@ public class CarrierMap implements MapFunction<String, CarrierInfo> {
     String column = "carrierInfo"; // 运营商
     HbaseUtil.putData(tableName, rowKey, familyName, column, carrierType);
 
-    String groupField = "yearbase==" + carrierType;
+    String  groupField = "yearbase==" + carrierType;
     CarrierInfo carrierInfo = new CarrierInfo();
     carrierInfo.setCarrier(carrierType);
     carrierInfo.setCount(1);

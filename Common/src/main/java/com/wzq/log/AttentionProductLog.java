@@ -3,6 +3,7 @@ package com.wzq.log;
 import java.io.Serializable;
 
 public class AttentionProductLog implements Serializable {
+
   private int productId; //商品id
   private int productTypeId; // 商品类别id
   private String operatorTime; //  操作时间
@@ -11,6 +12,7 @@ public class AttentionProductLog implements Serializable {
   private int userId;
   private int useType;
   private String ip; //访问ip
+  private String brand; //品牌
 
   public String getIp() {
     return ip;
@@ -74,5 +76,13 @@ public class AttentionProductLog implements Serializable {
 
   public void setUseType(int useType) {
     this.useType = useType;
+  }
+
+  public String getBrand() {
+    return brand;
+  }
+
+  public void setBrand(String brand) {
+    this.brand = brand;
   }
 }

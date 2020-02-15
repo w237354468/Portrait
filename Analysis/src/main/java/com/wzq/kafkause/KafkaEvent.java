@@ -1,4 +1,4 @@
-package com.wzq.util;
+package com.wzq.kafkause;
 
 public class KafkaEvent {
 
@@ -36,5 +36,23 @@ public class KafkaEvent {
 
   public void setTimestamp(long timestamp) {
     this.timestamp = timestamp;
+  }
+
+  public static KafkaEvent fromString(String eventString) {
+    String[] split = eventString.split("##1##");
+    return new KafkaEvent(split[0], Integer.parseInt(split[1]), Long.parseLong(split[2]));
+  }
+
+  @Override
+  public String toString() {
+    return "KafkaEvent{"
+        + "word='"
+        + word
+        + '\''
+        + ", frequency="
+        + frequency
+        + ", timestamp="
+        + timestamp
+        + '}';
   }
 }

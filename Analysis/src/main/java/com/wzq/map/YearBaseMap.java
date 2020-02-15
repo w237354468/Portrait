@@ -22,7 +22,7 @@ public class YearBaseMap implements MapFunction<String, YearBase> {
     String registerTime = userInfos[6];
     String userType = userInfos[7];
 
-    String yearBaseType = DateUtil.getYearBaseByAge(age);
+    String  yearBaseType = DateUtil.getYearBaseByAge(age);
     String tableName = "userFlagInfo";
     String rowKey = userId;
     String familyName = "baseInfo";

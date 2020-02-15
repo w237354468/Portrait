@@ -1,8 +1,8 @@
 package com.wzq.task;
 
-import com.wzq.reduce.BaijiaReduce;
 import com.wzq.entity.BaijiaInfo;
 import com.wzq.map.BaijiaMap;
+import com.wzq.reduce.BaijiaReduce;
 import com.wzq.util.DateUtil;
 import com.wzq.util.HbaseUtil;
 import java.text.ParseException;

@@ -6,8 +6,12 @@ import com.wzq.log.AttentionProductLog;
 import com.wzq.log.BuyCartProductLog;
 import com.wzq.log.CollectProductLog;
 import com.wzq.log.ScanProductLog;
+import com.wzq.utils.ReadProperties;
+import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("infoLog")
 public class appLoginController {
+
+  private final String attentionProductLogTopic = ReadProperties.getKey("attentionProductLog");
+  private final String buyCartProductLogTopic = ReadProperties.getKey("buyCartProductLog");
+  private final String collectProductLogTopic = ReadProperties.getKey("collectProductLog");
+  private final String scanProductLogTopic = ReadProperties.getKey("scanProductLog");
+
+  @Autowired private KafkaTemplate<String, String> kafkaTemplate;
 
   @RequestMapping(value = "hw", method = RequestMethod.GET)
   public String hw(HttpServletRequest req) {
@@ -45,6 +56,7 @@ public class appLoginController {
           AttentionProductLog attentionProductLog =
               JSONObject.parseObject(data, AttentionProductLog.class);
           messageString = JSONObject.toJSONString(attentionProductLog);
+          kafkaTemplate.send(attentionProductLogTopic, messageString + "##1##" + new Date().getTime());
         }
         break;
       case "BuyCartProductLog":
@@ -52,20 +64,22 @@ public class appLoginController {
           BuyCartProductLog buyCartProductLog =
               JSONObject.parseObject(data, BuyCartProductLog.class);
           messageString = JSONObject.toJSONString(buyCartProductLog);
+          kafkaTemplate.send(buyCartProductLogTopic, messageString + "##1##" + new Date().getTime());
         }
         break;
       case "CollectProductLog":
         {
           CollectProductLog collectProductLog =
               JSONObject.parseObject(data, CollectProductLog.class);
-
           messageString = JSONObject.toJSONString(collectProductLog);
+          kafkaTemplate.send(collectProductLogTopic, messageString + "##1##" + new Date().getTime());
         }
         break;
       case "ScanProductLog":
         {
           ScanProductLog scanProductLog = JSONObject.parseObject(data, ScanProductLog.class);
           messageString = JSONObject.toJSONString(scanProductLog);
+          kafkaTemplate.send(scanProductLogTopic, messageString + "##1##" + new Date().getTime());
         }
         break;
     }

@@ -14,7 +14,7 @@ public class MonGoUtil {
   // mongo DB中类似于Collection是表，Document是行，存储的是key,value对
   private static MongoClient mongoClient = new MongoClient("ip", 0000);
 
-  public static Document findoneby(String tableName, String database, String type) {
+  public static Document findoneby(String tableName, String database, String  type) {
 
     MongoDatabase mongoDatabase = mongoClient.getDatabase(database);
     MongoCollection mongoCollection = mongoDatabase.getCollection(tableName);

@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
-public class BrankLikeMap implements FlatMapFunction<KafkaEvent, BrandLike> {
+public class BrandLikeMap implements FlatMapFunction<KafkaEvent, BrandLike> {
 
   @Override
   public void flatMap(KafkaEvent value, Collector<BrandLike> out) throws Exception {
@@ -40,7 +40,7 @@ public class BrankLikeMap implements FlatMapFunction<KafkaEvent, BrandLike> {
     // 获取之前的品牌偏好
     String brandLikeBefore = MapUtils.getMaxInMap(map);
 
-    Long preBrand = map.get(brand) == null ? 1L : map.get(brand);
+    Long preBrand = map.get(brand) == null ? 0L : map.get(brand);
     map.put(brand, preBrand + 1);
     String finalString = JSONObject.toJSONString(map);
     HbaseUtil.putData(tableName, rowKey, familyName, colum, finalString);
@@ -50,12 +50,14 @@ public class BrankLikeMap implements FlatMapFunction<KafkaEvent, BrandLike> {
       BrandLike brandLikeLastTime = new BrandLike();
       brandLikeLastTime.setBrand(brandLikeBefore);
       brandLikeLastTime.setCount(-1);
+      brandLikeLastTime.setGroupByField("==brandlike==" + brandLikeBefore);
       out.collect(brandLikeLastTime);
     }
     // 改变后的喜好
     BrandLike brandLikeNow = new BrandLike();
     brandLikeNow.setBrand(maxBrandCurrent);
-    brandLikeNow.setCount(0);
+    brandLikeNow.setCount(1);
+    brandLikeNow.setGroupByField("==brandlike==" + maxBrandCurrent);
     out.collect(brandLikeNow);
 
     // 更新用户最新偏好

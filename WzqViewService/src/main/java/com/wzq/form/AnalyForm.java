@@ -1,4 +1,4 @@
-package com.wzq.search.form;
+package com.wzq.form;
 
 public class AnalyForm {
 

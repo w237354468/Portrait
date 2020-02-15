@@ -1,15 +1,16 @@
 package com.wzq.entity;
 
-public class BrankLike {
+public class BrandLike {
 
-  private String brand;
+  private String  brand;
   private long count;
+  private String groupByField;
 
-  public String getBrand() {
+  public String  getBrand() {
     return brand;
   }
 
-  public void setBrand(String brand) {
+  public void setBrand(String  brand) {
     this.brand = brand;
   }
 
@@ -19,5 +20,13 @@ public class BrankLike {
 
   public void setCount(long count) {
     this.count = count;
+  }
+
+  public String getGroupByField() {
+    return groupByField;
+  }
+
+  public void setGroupByField(String groupByField) {
+    this.groupByField = groupByField;
   }
 }

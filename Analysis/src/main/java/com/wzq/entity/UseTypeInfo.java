@@ -1,6 +1,6 @@
 package com.wzq.entity;
 
-public class UserTypeInfo {
+public class UseTypeInfo {
   private String userType;
   private long count;
   private String groupField;
