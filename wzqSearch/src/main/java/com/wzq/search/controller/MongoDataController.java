@@ -23,7 +23,7 @@ public class MongoDataController {
 
   @RequestMapping("searchYearBase")
   public List<AnalyResult> searchYearBase() {
-    ArrayList<AnalyResult> result = new ArrayList<>();
+    List<AnalyResult> result = new ArrayList<>();
     AnalyResult analyResult = new AnalyResult();
     analyResult.setCount(11L);
     analyResult.setInfo("success");

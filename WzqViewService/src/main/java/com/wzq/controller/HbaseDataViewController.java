@@ -24,11 +24,10 @@ public class HbaseDataViewController {
   @RequestMapping(
       value = "resultInfoView",
       method = RequestMethod.POST,
-      produces = "application/json.charset=UTF-8")
+      produces = "application/json;charset=UTF-8")
   public String resultInfoView(@RequestBody BaseViewform baseViewform) {
     String type = baseViewform.getType();
     String userId = baseViewform.getUserId();
-    String result = "";
     ArrayList<ViewResultAnaly> resultList = new ArrayList<ViewResultAnaly>();
 
     switch (type) {

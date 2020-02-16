@@ -37,52 +37,49 @@ public class MongoDataViewController {
   @RequestMapping(
       value = "resultInfoView",
       method = RequestMethod.POST,
-      produces = "application/json.charset=UTF-8")
+      produces = "application/json;charset=UTF-8") //返回时的类型
   public String resultInfoView(@RequestBody AnalyForm analyForm) {
     String type = analyForm.getType();
     List<AnalyResult> analyResults = new ArrayList<>();
     switch (type) {
-      case "yearBase":
-        {
-          analyResults = mongoDataService.searchYearBase();
-          break;
-        }
-      case "userType":
-        {
-          analyResults = mongoDataService.searchUserType();
-          break;
-        }
-      case "email":
-        {
-          analyResults = mongoDataService.searchEmail();
-          break;
-        }
-      case "consumptionLevel":
-        {
-          analyResults = mongoDataService.searchConsumerLevel();
-          break;
-        }
-      case "ChaoNanNv":
-        {
-          analyResults = mongoDataService.searchChaoNanNv();
-          break;
-        }
-      case "carrier":
-        {
-          analyResults = mongoDataService.searchCarrier();
-          break;
-        }
-      case "brandLike":
-        {
-          analyResults = mongoDataService.searchBrandLike();
-          break;
-        }
+      case "yearBase": {
+        analyResults = mongoDataService.searchYearBase();
+        break;
+      }
+      case "userType": {
+        analyResults = mongoDataService.searchUserType();
+        break;
+      }
+      case "email": {
+        analyResults = mongoDataService.searchEmail();
+        break;
+      }
+      case "consumptionLevel": {
+        analyResults = mongoDataService.searchConsumerLevel();
+        break;
+      }
+      case "ChaoNanNv": {
+        analyResults = mongoDataService.searchChaoNanNv();
+        break;
+      }
+      case "carrier": {
+        analyResults = mongoDataService.searchCarrier();
+        break;
+      }
+      case "brandLike": {
+        analyResults = mongoDataService.searchBrandLike();
+        break;
+      }
     }
     ViewResultAnaly result = new ViewResultAnaly();
+    ArrayList<String> infoList = new ArrayList<>();
+    ArrayList<Long> countlist = new ArrayList<>();
     for (AnalyResult analyResult : analyResults) {
-      result.getCount().add(analyResult.getCount());
-      result.getInfoList().add(analyResult.getInfo());
+      countlist.add(analyResult.getCount());
+      infoList.add(analyResult.getInfo());
     }
+    result.setInfoList(infoList);
+    result.setCount(countlist);
     return JSONObject.toJSONString(result);
   }
 }
