@@ -1,18 +1,15 @@
 package com.wzq;
 
 import com.alibaba.fastjson.JSON;
-import com.wzq.entity.AppEvent;
-import com.wzq.entity.AppType;
+import com.wzq.entity.app.AppEvent;
+import com.wzq.process.location.PersonAppFunction;
+import com.wzq.process.location.PersonDeviceFunction;
+import com.wzq.process.location.RowToAppEventMap;
 import com.wzq.util.HbaseUtil;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -47,132 +44,21 @@ public class AppSql {
     SparkSession ss = SparkSession.builder().enableHiveSupport().getOrCreate();
     Dataset<Row> appDataOneDay = ss.sql("select * from xxx where partition=''");
     long count = appDataOneDay.count();
-    JavaRDD<AppEvent> map =
-        appDataOneDay
-            .javaRDD()
-            .map(
-                new Function<Row, AppEvent>() {
-                  @Override
-                  public AppEvent call(Row v1) throws Exception {
-                    return new AppEvent();
-                  }
-                });
+    JavaRDD<AppEvent> map = appDataOneDay.javaRDD().map(new RowToAppEventMap());
     HashMap<String, Long> globalAppCount =
         parallelize
-            .groupBy(
-                new Function<AppEvent, String>() {
-                  @Override
-                  public String call(AppEvent appPerPeople) throws Exception {
-                    return appPerPeople.getPhone();
-                  }
-                })
-            .mapValues(
-                new Function<Iterable<AppEvent>, Iterable<AppEvent>>() {
-                  @Override
-                  public Iterable<AppEvent> call(Iterable<AppEvent> v1) throws Exception {
-                    ArrayList<AppEvent> appEvents1 = new ArrayList<>();
-                    v1.iterator().forEachRemaining(appEvents1::add);
-                    String phoneRow = appEvents1.get(0).getPhone();
-
-                    // 设备统计近100次内使用最多系统
-                    String deviceUseMapString =
-                        HbaseUtil.getData(tableName, phoneRow, "behavior", "deviceUse");
-                    List<String> deviceUseList = JSON.parseObject(deviceUseMapString, List.class);
-                    if (deviceUseList == null) deviceUseList = new LinkedList<>();
-                    for (AppEvent appEvent : appEvents1) {
-                      if (deviceUseList.size() < 100) {
-                        String newDeivce = appEvent.getSystem();
-                        deviceUseList.add(newDeivce);
-                      } else {
-                        deviceUseList.remove(0);
-                        String newDeivce = appEvent.getSystem();
-                        deviceUseList.add(newDeivce);
-                      }
-                    }
-                    HashMap<String, Long> conutMap = new HashMap<>();
-                    for (String s : deviceUseList) {
-                      Long orDefault = conutMap.getOrDefault(s, 0L);
-                      conutMap.put(s, ++orDefault);
-                    }
-                    String frequencyDevice = getFrequencyLocation(conutMap);
-                    String data =
-                        HbaseUtil.getData(tableName, phoneRow, "baseInfo", "useDeviceUsually");
-                    if (StringUtils.isBlank(data) || !frequencyDevice.equals(data)) {
-                      HbaseUtil.putData(tableName, phoneRow, "baseInfo", new HashMap<>());
-                    }
-                    // 至此更新完常用设备
-
-                    return v1;
-                  }
-
-                  public String getFrequencyLocation(Map<String, Long> map) {
-                    return map.entrySet().stream()
-                        .sorted(Entry.<String, Long>comparingByValue().reversed()) // reversed不生效
-                        .limit(1)
-                        .map(Entry::getKey)
-                        .findFirst()
-                        .get();
-                  }
-                })
-            .mapValues(
-                (Function<Iterable<AppEvent>, Map<String, Long>>)
-                    v1 -> {
-                      ArrayList<AppEvent> appEvents1 = new ArrayList<>();
-                      v1.iterator().forEachRemaining(appEvents1::add);
-                      String phoneRow = appEvents1.get(0).getPhone();
-                      // 提取各APP与数量关系
-                      String globalAppString =
-                          HbaseUtil.getData(tableName, phoneRow, "behavior", "globalApp");
-                      Map<String, Long> globalApp = JSON.parseObject(globalAppString, Map.class);
-                      // 合并
-                      for (AppEvent appEvent : appEvents1) {
-                        String appName = appEvent.getAppId();
-                        Long orDefault = globalApp.getOrDefault(appName, 0L);
-                        globalApp.put(appName, orDefault);
-                      }
-                      // 取前10
-                      Stream<Entry<String, Long>> sorted = globalApp.entrySet().stream().sorted();
-
-                      // 饼图
-                      HashMap<String, Long> bingMap = new HashMap<>();
-
-                      for (Entry<String, Long> stringLongEntry : globalApp.entrySet()) {
-                        String type = AppType.getType(stringLongEntry.getKey());
-                        Long orDefault = bingMap.getOrDefault(type, 0L);
-                        bingMap.put(type, orDefault + stringLongEntry.getValue());
-                      }
-
-                      // 更新前10结果 与全局数据
-                      HashMap<String, String> result = new HashMap<>();
-                      result.put("top10AppHistory", JSON.toJSONString(new HashMap<>()));
-                      result.put("globalApp", JSON.toJSONString(globalApp));
-                      // 更新饼图
-                      result.put("bing", JSON.toJSONString(bingMap));
-                      HbaseUtil.putData(tableName, phoneRow, "behavior", result);
-                      // 今日新增数据量
-                      return globalApp;
-                    })
+            .groupBy((Function<AppEvent, String>) AppEvent::getPhone)
+            .mapValues(new PersonDeviceFunction())
+            .mapValues(new PersonAppFunction())
             .aggregate(
-                new HashMap<String, Long>(),
-                new Function2<
-                    HashMap<String, Long>,
-                    Tuple2<String, Map<String, Long>>,
-                    HashMap<String, Long>>() {
-                  @Override
-                  public HashMap<String, Long> call(
-                      HashMap<String, Long> v1, Tuple2<String, Map<String, Long>> v2)
-                      throws Exception {
-                    return combineMap(v1, v2._2);
-                  }
-                },
-                new Function2<
-                    HashMap<String, Long>, HashMap<String, Long>, HashMap<String, Long>>() {
-                  @Override
-                  public HashMap<String, Long> call(
-                      HashMap<String, Long> v1, HashMap<String, Long> v2) throws Exception {
-                    return combineMap(v1, v2);
-                  }
-                });
+                new HashMap<>(),
+                (Function2<
+                        HashMap<String, Long>,
+                        Tuple2<String, Map<String, Long>>,
+                        HashMap<String, Long>>)
+                    (v1, v2) -> combineMap(v1, v2._2),
+                (Function2<HashMap<String, Long>, HashMap<String, Long>, HashMap<String, Long>>)
+                    AppSql::combineMap);
 
     // APP使用数据和APP类型使用数据
     String appHistoryDataCount = HbaseUtil.getData("globalTable", "", "", "appHistoryDataCount");
@@ -181,7 +67,7 @@ public class AppSql {
     appHistoryCount.put(new Date().toString(), String.valueOf(count));
     HbaseUtil.putData("", "", "", appHistoryCount);
 
-    globalAppCount.size(); // 取前10，总体分类
+    globalAppCount.size(); // 取前10，饼图分类
   }
 
   public static HashMap<String, Long> combineMap(HashMap<String, Long> m1, Map<String, Long> m2) {
@@ -189,6 +75,8 @@ public class AppSql {
       Long orDefault = m1.getOrDefault(m2Key, 0L);
       if (orDefault == 0L) {
         m1.put(m2Key, m2.get(m2Key));
+      } else {
+        m1.put(m2Key, m2.get(m2Key) + m1.get(m2Key));
       }
     }
     return m1;

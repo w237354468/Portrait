@@ -1,7 +1,7 @@
 package com.wzq.util;
 
 import com.alibaba.fastjson.JSON;
-import com.wzq.entity.JizhanLocationTable;
+import com.wzq.entity.location.JizhanLocationTable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

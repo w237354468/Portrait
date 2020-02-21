@@ -1,8 +1,8 @@
 package com.wzq;
 
 import com.alibaba.fastjson.JSON;
-import com.wzq.entity.JizhanLocationTable;
-import com.wzq.entity.LocationData;
+import com.wzq.entity.location.JizhanLocationTable;
+import com.wzq.entity.location.LocationData;
 import com.wzq.util.HbaseUtil;
 import com.wzq.util.LocationUtil;
 import java.util.ArrayList;

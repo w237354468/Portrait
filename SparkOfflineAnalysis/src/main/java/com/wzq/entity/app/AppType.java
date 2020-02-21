@@ -1,4 +1,4 @@
-package com.wzq.entity;
+package com.wzq.entity.app;
 
 public class AppType {
 

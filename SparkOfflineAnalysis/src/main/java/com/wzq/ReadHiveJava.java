@@ -1,7 +1,7 @@
 package com.wzq;
 
-import com.wzq.entity.MarkObject;
-import com.wzq.entity.ProfileEvent;
+import com.wzq.entity.basic.MarkObject;
+import com.wzq.entity.basic.ProfileEvent;
 import com.wzq.util.HbaseUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +14,6 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.sql.SparkSession;
 
 public class ReadHiveJava {
 
