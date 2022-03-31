@@ -20,7 +20,7 @@
     <dependency>
       <artifactId>spring-boot-starter-web</artifactId>
       <groupId>org.springframework.boot</groupId>
-      <version>2.1.1.RELEASE</version>
+      <version>2.5.12</version>
     </dependency>
     <dependency>
       <artifactId>Common</artifactId>
