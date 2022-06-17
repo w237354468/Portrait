@@ -13,7 +13,7 @@
     <dependency>
       <artifactId>fastjson</artifactId>
       <groupId>com.alibaba</groupId>
-      <version>1.2.60</version>
+      <version>1.2.83</version>
     </dependency>
     <dependency>
       <groupId>com.typesafe</groupId>
